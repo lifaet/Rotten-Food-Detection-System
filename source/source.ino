@@ -12,7 +12,7 @@ int pinGreenLed = 8;
 int pinRedLed = 9;
 int buzzer = 10;
 int pinSensor = A0;
-int THRESHOLD = 250;
+int THRESHOLD = 37;
 int rdata = 0;
 void setup() {
   Serial.begin(9600);
