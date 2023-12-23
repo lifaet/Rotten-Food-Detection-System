@@ -34,7 +34,7 @@ void loop() {
   Serial.print("Methane Range: ");
   Serial.println(rdata);
   lcd.setCursor(0, 0);
-  lcd.print("Methane: %d", rdata);
+  lcd.print(String("Methane Rate:")+String(rdata));
   if (rdata >= THRESHOLD) {
     digitalWrite(pinRedLed, HIGH);
     digitalWrite(pinGreenLed, LOW);
