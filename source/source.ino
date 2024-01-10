@@ -10,7 +10,6 @@
 #include <NewPing.h>
 #include <SoftwareSerial.h>
 #include <LiquidCrystal_I2C.h>
-
 #define TRIGGER_PIN 11
 #define ECHO_PIN 12
 #define MAX_DISTANCE 200
@@ -23,7 +22,6 @@ int pinRedLed = 9;
 int buzzer = 10;
 int pinSensor = A0;
 int rdata = 0;
-
 int DETECTION_DISTANCE;
 int THRESHOLD;
 
