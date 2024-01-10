@@ -48,6 +48,9 @@ void loop() {
   if (sonar.ping() / US_ROUNDTRIP_CM < distanceThreshold) {
     foodAnalyze();
   } else {
+    digitalWrite(redLedPin, LOW);
+    digitalWrite(greenLedPin, LOW);
+    digitalWrite(buzzerPin, LOW);
     lcd.clear();
     lcd.setCursor(0, 0);
     lcd.print("   Box Empty   ");
