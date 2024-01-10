@@ -43,8 +43,8 @@ void setup() {
   THRESHOLD = analogRead(pinSensor) + 5;
   lcd.clear();
   lcd.setCursor(0, 0);
-  lcd.print("Analysis complete.");
-  Serial.println("Analysis complete.");
+  lcd.print("Calebrated...");
+  Serial.println("Calebrated...");
   lcd.clear();
 }
 
