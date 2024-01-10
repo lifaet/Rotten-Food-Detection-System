@@ -35,7 +35,7 @@ void setup() {
   Serial.println("Calibrating...");
   delay(2000);
   distanceThreshold = sonar.ping() / US_ROUNDTRIP_CM - 2;
-  gasThreshold = analogRead(gasPin) + 5;
+  gasThreshold = analogRead(gasPin) + 10;
   lcd.clear();
   lcd.print("Calibrated...");
   Serial.println("Calibrated...");
