@@ -46,7 +46,7 @@ void setup() {
 void loop() {
   delay(50);
   if (sonar.ping() / US_ROUNDTRIP_CM < distanceThreshold) {
-    detectAndAnalyzeFood();
+    foodAnalyze();
   } else {
     lcd.clear();
     lcd.setCursor(0, 0);
@@ -58,7 +58,7 @@ void loop() {
   }
 }
 
-void detectAndAnalyzeFood() {
+void foodAnalyze() {
   lcd.clear();
   lcd.setCursor(0, 0);
   lcd.print(" Food Detected ");
@@ -68,31 +68,40 @@ void detectAndAnalyzeFood() {
   lcd.print("  Analyzing... ");
   Serial.println("Analyzing...");
   delay(10000);
-  smellReading = analogRead(gasPin);
   lcd.clear();
+  smellReading = analogRead(gasPin);
   if (smellReading < gasThreshold) {
-    digitalWrite(redLedPin, LOW);
-    digitalWrite(greenLedPin, HIGH);
-    digitalWrite(buzzerPin, LOW);
-    lcd.setCursor(0, 0);
-    lcd.print("Methane Rate:" + String(smellReading));
-    lcd.setCursor(0, 1);
-    lcd.print("  Food is Good  ");
-    Serial.println("Food is Good...");
-    while (sonar.ping() / US_ROUNDTRIP_CM < distanceThreshold) {
-      delay(1000);
-    }
+    goodFood();
+    foodMoitor()
   } else {
-    digitalWrite(redLedPin, HIGH);
-    digitalWrite(greenLedPin, LOW);
-    digitalWrite(buzzerPin, HIGH);
-    lcd.setCursor(0, 0);
-    lcd.print("Methane Rate:" + String(smellReading));
-    lcd.setCursor(0, 1);
-    lcd.print(" Food  Spoiled ");
-    Serial.println("Food Spoiled");
-    while (sonar.ping() / US_ROUNDTRIP_CM < distanceThreshold) {
-      delay(1000);
-    }
+    badFood();
+    foodMoitor();
+  }
+}
+
+void goodFood() {
+  digitalWrite(redLedPin, LOW);
+  digitalWrite(greenLedPin, HIGH);
+  digitalWrite(buzzerPin, LOW);
+  lcd.setCursor(0, 0);
+  lcd.print("Methane Rate:" + String(smellReading));
+  lcd.setCursor(0, 1);
+  lcd.print("  Food is Good  ");
+  Serial.println("Food is Good...");
+}
+void badFood() {
+  digitalWrite(redLedPin, HIGH);
+  digitalWrite(greenLedPin, LOW);
+  digitalWrite(buzzerPin, HIGH);
+  lcd.setCursor(0, 0);
+  lcd.print("Methane Rate:" + String(smellReading));
+  lcd.setCursor(0, 1);
+  lcd.print(" Food  Spoiled ");
+  Serial.println("Food Spoiled");
+}
+
+void foodMoitor() {
+  while (sonar.ping() / US_ROUNDTRIP_CM < distanceThreshold) {
+    delay(1000);
   }
 }
