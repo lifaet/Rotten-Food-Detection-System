@@ -1,10 +1,10 @@
 // Circuit Connection
-// Green Led digital 8
-// Red Led digital 9
-// buzzerPin digital 10
-// Gass sensor Analog0
-// Ultrasonic triger 11
-// Ultrasonic eco 12
+// Green led = digital 8
+// Red led = digital 9
+// buzzer = digital 10
+// Gas = Analog0
+// Ultrasonic triger = digital 11
+// Ultrasonic eco = digital 12
 // Connect all ground to ground
 // Connect all 5v/Vin/Vcc to 5v
 
@@ -33,9 +33,9 @@ void setup() {
   lcd.setCursor(0, 0);
   lcd.print("Calibrating...");
   Serial.println("Calibrating...");
+  delay(2000);
   distanceThreshold = sonar.ping() / US_ROUNDTRIP_CM - 2;
   gasThreshold = analogRead(gasPin) + 5;
-  delay(1500);
   lcd.clear();
   lcd.print("Calibrated...");
   Serial.println("Calibrated...");
@@ -63,7 +63,7 @@ void foodAnalyze() {
   lcd.setCursor(0, 0);
   lcd.print(" Food Detected ");
   Serial.println("Food Detected");
-  delay(1000);
+  delay(500);
   lcd.setCursor(0, 1);
   lcd.print("  Analyzing... ");
   Serial.println("Analyzing...");
