@@ -7,9 +7,11 @@
 // Ultrasonic eco 12
 // Connect all ground to ground
 // Connect all 5v/Vin/Vcc to 5v
+
 #include <NewPing.h>
 #include <SoftwareSerial.h>
 #include <LiquidCrystal_I2C.h>
+
 #define TRIGGER_PIN 11
 #define ECHO_PIN 12
 #define MAX_DISTANCE 200
@@ -25,7 +27,8 @@ int rdata = 0;
 int DETECTION_DISTANCE;
 int THRESHOLD;
 
-void setup() {
+void setup()
+{
   Serial.begin(9600);
   pinMode(buzzer, OUTPUT);
   pinMode(pinRedLed, OUTPUT);
@@ -35,58 +38,70 @@ void setup() {
   lcd.backlight();
   lcd.clear();
   lcd.setCursor(0, 0);
-  lcd.print("Calebrating...");
-  Serial.println("Calebrating...");
+  lcd.print("Calibrating...");
+  Serial.println("Calibrating...");
   DETECTION_DISTANCE = sonar.ping() / US_ROUNDTRIP_CM - 2;
   THRESHOLD = analogRead(pinSensor) + 5;
+  delay(1500);
   lcd.clear();
-  lcd.setCursor(0, 0);
-  lcd.print("Calebrated...");
-  Serial.println("Calebrated...");
+  lcd.print("Calibrated...");
+  Serial.println("Calibrated...");
+  delay(500);
   lcd.clear();
 }
 
-void loop() {
+void loop()
+{
   delay(50);
   unsigned int uS = sonar.ping();
-  if (uS / US_ROUNDTRIP_CM < DETECTION_DISTANCE) {
+  if (uS / US_ROUNDTRIP_CM < DETECTION_DISTANCE)
+  {
     lcd.clear();
     lcd.setCursor(0, 0);
-    lcd.print("Food Detected");
+    lcd.print(" Food Detected ");
     Serial.println("Food Detected");
-    delay(2000);
-    smellChecker();
-  } else {
+    delay(1000);
+    lcd.setCursor(0, 1);
+    lcd.print("  Analyzing... ");
+    Serial.println("Analyzing...");
+    delay(10000);
+    int rdata = analogRead(pinSensor);
+    lcd.clear();
+    if (rdata < THRESHOLD)
+    {
+      digitalWrite(pinRedLed, LOW);
+      digitalWrite(pinGreenLed, HIGH);
+      digitalWrite(buzzer, LOW);
+      lcd.setCursor(0, 0);
+      lcd.print("Methane Rate:" + String(rdata));
+      lcd.setCursor(0, 1);
+      lcd.print("  Food is Good  ");
+      Serial.println("Food is Good...");
+      delay(5000);
+      exit(0);
+    }
+    else
+    {
+      digitalWrite(pinRedLed, HIGH);
+      digitalWrite(pinGreenLed, LOW);
+      digitalWrite(buzzer, HIGH);
+      lcd.setCursor(0, 0);
+      lcd.print("Methane Rate:" + String(rdata));
+      lcd.setCursor(0, 1);
+      lcd.print(" Food  Spoiled ");
+      Serial.println("Food Spoiled");
+      delay(5000);
+      exit(0);
+    }
+  }
+  else
+  {
+    delay(500);
     lcd.clear();
     lcd.setCursor(0, 0);
-    lcd.print("Box Empty");
+    lcd.print("   Box Empty   ");
     Serial.println("Box Empty");
-  }
-}
-
-void smellChecker() {
-  int rdata = analogRead(pinSensor);
-  lcd.clear();
-  lcd.setCursor(0, 0);
-  lcd.print("Methane Rate: " + String(rdata));
-  Serial.println("Methane Rate: " + String(rdata));
-  delay(2000);
-  lcd.setCursor(0, 1);
-  lcd.print("Analyzing...");
-  Serial.println("Analyzing...");
-  delay(5000);
-  lcd.setCursor(0, 1);
-  if (rdata >= THRESHOLD) {
-    digitalWrite(pinRedLed, HIGH);
-    digitalWrite(pinGreenLed, LOW);
-    digitalWrite(buzzer, HIGH);
-    lcd.print("Food Spoiled");
-    Serial.println("Food Spoiled");
-  } else {
-    digitalWrite(pinRedLed, LOW);
-    digitalWrite(pinGreenLed, HIGH);
-    digitalWrite(buzzer, LOW);
-    lcd.print("Food is Good");
-    Serial.println("Food is Good");
+    lcd.setCursor(0, 1);
+    lcd.print("  Insert Food  ");
   }
 }
