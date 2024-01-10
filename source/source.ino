@@ -51,9 +51,9 @@ void loop() {
     lcd.clear();
     lcd.setCursor(0, 0);
     lcd.print("   Box Empty   ");
-    Serial.println("Box Empty");
     lcd.setCursor(0, 1);
     lcd.print("  Insert Food  ");
+    Serial.println("Box Empty, Insert Food");
     delay(500);
   }
 }
@@ -87,7 +87,7 @@ void goodFood() {
   lcd.print("Methane Rate:" + String(smellReading));
   lcd.setCursor(0, 1);
   lcd.print("  Food is Good  ");
-  Serial.println("Food is Good...");
+  Serial.println("Food is Good");
 }
 
 void badFood() {
