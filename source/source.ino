@@ -89,6 +89,7 @@ void goodFood() {
   lcd.print("  Food is Good  ");
   Serial.println("Food is Good...");
 }
+
 void badFood() {
   digitalWrite(redLedPin, HIGH);
   digitalWrite(greenLedPin, LOW);
