@@ -72,7 +72,7 @@ void foodAnalyze() {
   smellReading = analogRead(gasPin);
   if (smellReading < gasThreshold) {
     goodFood();
-    foodMoitor()
+    foodMoitor();
   } else {
     badFood();
     foodMoitor();
