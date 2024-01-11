@@ -20,7 +20,7 @@
 NewPing sonar(triggerPin, echoPin, maxDistance);
 LiquidCrystal_I2C lcd(0x27, 16, 2);
 int smellReading = 0, distanceThreshold, gasThreshold;
-int distance = sonar.ping() / US_ROUNDTRIP_CM;
+
 void setup() {
   Serial.begin(9600);
   pinMode(buzzerPin, OUTPUT);
@@ -34,7 +34,7 @@ void setup() {
   lcd.print("Calibrating...");
   Serial.println("Calibrating...");
   delay(2000);
-  distanceThreshold = distance - 2;
+  distanceThreshold = sonar.ping() / US_ROUNDTRIP_CM - 2;
   gasThreshold = analogRead(gasPin) + 10;
   lcd.clear();
   lcd.print("Calibrated...");
@@ -45,7 +45,7 @@ void setup() {
 
 void loop() {
   delay(50);
-  if (distance < distanceThreshold) {
+  if (sonar.ping() / US_ROUNDTRIP_CM < distanceThreshold) {
     foodAnalyze();
   } else {
     noFood();
@@ -107,12 +107,10 @@ void noFood() {
   lcd.print("  Insert Food  ");
   Serial.println("Box Empty, Insert Food");
   delay(500);
-  digitalWrite(greenLedPin, HIGH);
-  delay(500);
 }
 
 void foodMoitor() {
-  while (distance < distanceThreshold) {
+  while (sonar.ping() / US_ROUNDTRIP_CM < distanceThreshold) {
     delay(1000);
   }
   lcd.clear();
