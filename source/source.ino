@@ -48,16 +48,7 @@ void loop() {
   if (sonar.ping() / US_ROUNDTRIP_CM < distanceThreshold) {
     foodAnalyze();
   } else {
-    digitalWrite(redLedPin, LOW);
-    digitalWrite(greenLedPin, LOW);
-    digitalWrite(buzzerPin, LOW);
-    lcd.clear();
-    lcd.setCursor(0, 0);
-    lcd.print("   Box Empty   ");
-    lcd.setCursor(0, 1);
-    lcd.print("  Insert Food  ");
-    Serial.println("Box Empty, Insert Food");
-    delay(500);
+    noFood();
   }
 }
 
@@ -71,7 +62,6 @@ void foodAnalyze() {
   lcd.print("  Analyzing... ");
   Serial.println("Analyzing...");
   delay(10000);
-  lcd.clear();
   smellReading = analogRead(gasPin);
   if (smellReading < gasThreshold) {
     goodFood();
@@ -86,6 +76,7 @@ void goodFood() {
   digitalWrite(redLedPin, LOW);
   digitalWrite(greenLedPin, HIGH);
   digitalWrite(buzzerPin, LOW);
+  lcd.clear();
   lcd.setCursor(0, 0);
   lcd.print("Methane Rate:" + String(smellReading));
   lcd.setCursor(0, 1);
@@ -97,6 +88,7 @@ void badFood() {
   digitalWrite(redLedPin, HIGH);
   digitalWrite(greenLedPin, LOW);
   digitalWrite(buzzerPin, HIGH);
+  lcd.clear();
   lcd.setCursor(0, 0);
   lcd.print("Methane Rate:" + String(smellReading));
   lcd.setCursor(0, 1);
@@ -104,8 +96,28 @@ void badFood() {
   Serial.println("Food Spoiled");
 }
 
+void noFood() {
+  digitalWrite(redLedPin, LOW);
+  digitalWrite(greenLedPin, LOW);
+  digitalWrite(buzzerPin, LOW);
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("   Box Empty   ");
+  lcd.setCursor(0, 1);
+  lcd.print("  Insert Food  ");
+  Serial.println("Box Empty, Insert Food");
+  delay(500);
+}
+
 void foodMoitor() {
   while (sonar.ping() / US_ROUNDTRIP_CM < distanceThreshold) {
     delay(1000);
   }
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("  Food Removed  ");
+  lcd.setCursor(0, 1);
+  lcd.print(" Refereshing... ");
+  Serial.println("Food Removed, Refreshing...");
+  delay(5000);
 }
