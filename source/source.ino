@@ -107,12 +107,15 @@ void noFood() {
   lcd.print("  Insert Food  ");
   Serial.println("Box Empty, Insert Food");
   delay(500);
+  digitalWrite(greenLedPin, HIGH);
+  delay(500);
 }
 
 void foodMoitor() {
   while (sonar.ping() / US_ROUNDTRIP_CM < distanceThreshold) {
     delay(1000);
   }
+  digitalWrite(buzzerPin, LOW);
   lcd.clear();
   lcd.setCursor(0, 0);
   lcd.print("  Food Removed  ");
