@@ -19,7 +19,7 @@
 #define gasPin A0
 NewPing sonar(triggerPin, echoPin, maxDistance);
 LiquidCrystal_I2C lcd(0x27, 16, 2);
-int smellReading = 0, distanceThreshold = 12, gasThreshold;
+int smellReading = 0, distanceThreshold = 11, gasThreshold;
 
 void setup() {
   Serial.begin(9600);
