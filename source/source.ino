@@ -106,6 +106,9 @@ void noFood() {
   lcd.setCursor(0, 1);
   lcd.print("  Insert Food  ");
   Serial.println("Box Empty, Insert Food");
+  delay(500);
+  digitalWrite(greenLedPin, HIGH);
+  delay(500);
 }
 
 void foodMoitor() {
