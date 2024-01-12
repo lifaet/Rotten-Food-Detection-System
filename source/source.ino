@@ -15,14 +15,13 @@
 #define buzzerPin 10
 #define triggerPin 11
 #define echoPin 12
-#define maxDistance 200
+#define maxDistance 50
 #define gasPin A0
 NewPing sonar(triggerPin, echoPin, maxDistance);
 LiquidCrystal_I2C lcd(0x27, 16, 2);
-int smellReading = 0, distanceThreshold = 11, gasThreshold;
+int smellReading = 0, distanceThreshold, gasThreshold;
 
 void setup() {
-  Serial.begin(9600);
   pinMode(buzzerPin, OUTPUT);
   pinMode(redLedPin, OUTPUT);
   pinMode(greenLedPin, OUTPUT);
@@ -32,19 +31,18 @@ void setup() {
   lcd.clear();
   lcd.setCursor(0, 0);
   lcd.print("Calibrating...");
-  Serial.println("Calibrating...");
   delay(2000);
+  distanceThreshold = (sonar.ping() / US_ROUNDTRIP_CM) - 2;
   gasThreshold = analogRead(gasPin) + 5;
   lcd.clear();
   lcd.print("Calibrated...");
-  Serial.println("Calibrated...");
   delay(500);
   lcd.clear();
 }
 
 void loop() {
   delay(50);
-  if (sonar.ping() / US_ROUNDTRIP_CM < distanceThreshold) {
+  if ((sonar.ping() / US_ROUNDTRIP_CM) < distanceThreshold) {
     foodAnalyze();
   } else {
     noFood();
@@ -55,19 +53,15 @@ void foodAnalyze() {
   lcd.clear();
   lcd.setCursor(0, 0);
   lcd.print(" Food Detected ");
-  Serial.println("Food Detected");
   delay(500);
   lcd.setCursor(0, 1);
   lcd.print("  Analyzing... ");
-  Serial.println("Analyzing...");
   delay(10000);
   smellReading = analogRead(gasPin);
   if (smellReading < gasThreshold) {
     goodFood();
-    foodMoitor();
   } else {
     badFood();
-    foodMoitor();
   }
 }
 
@@ -80,7 +74,7 @@ void goodFood() {
   lcd.print("Methane Rate:" + String(smellReading));
   lcd.setCursor(0, 1);
   lcd.print("  Food is Good  ");
-  Serial.println("Food is Good");
+  foodMonitor();
 }
 
 void badFood() {
@@ -92,7 +86,7 @@ void badFood() {
   lcd.print("Methane Rate:" + String(smellReading));
   lcd.setCursor(0, 1);
   lcd.print(" Food  Spoiled ");
-  Serial.println("Food Spoiled");
+  foodMonitor();
 }
 
 void noFood() {
@@ -104,14 +98,10 @@ void noFood() {
   lcd.print("   Box Empty   ");
   lcd.setCursor(0, 1);
   lcd.print("  Insert Food  ");
-  Serial.println("Box Empty, Insert Food");
-  delay(500);
-  digitalWrite(greenLedPin, HIGH);
-  delay(500);
 }
 
-void foodMoitor() {
-  while (sonar.ping() / US_ROUNDTRIP_CM < distanceThreshold) {
+void foodMonitor() {
+  while ((sonar.ping() / US_ROUNDTRIP_CM) < distanceThreshold) {
     delay(1000);
   }
   digitalWrite(buzzerPin, LOW);
@@ -119,7 +109,6 @@ void foodMoitor() {
   lcd.setCursor(0, 0);
   lcd.print("  Food Removed  ");
   lcd.setCursor(0, 1);
-  lcd.print(" Refereshing... ");
-  Serial.println("Food Removed, Refreshing...");
+  lcd.print(" Refreshing... ");
   delay(5000);
 }
