@@ -35,7 +35,7 @@ void setup() {
   Serial.println("Calibrating...");
   delay(2000);
   distanceThreshold = sonar.ping() / US_ROUNDTRIP_CM - 2;
-  gasThreshold = analogRead(gasPin) + 10;
+  gasThreshold = analogRead(gasPin) + 5;
   lcd.clear();
   lcd.print("Calibrated...");
   Serial.println("Calibrated...");
@@ -73,8 +73,8 @@ void foodAnalyze() {
 }
 
 void goodFood() {
-  digitalWrite(redLedPin, LOW);
   digitalWrite(greenLedPin, HIGH);
+  digitalWrite(redLedPin, LOW);
   digitalWrite(buzzerPin, LOW);
   lcd.clear();
   lcd.setCursor(0, 0);
@@ -85,8 +85,8 @@ void goodFood() {
 }
 
 void badFood() {
-  digitalWrite(redLedPin, HIGH);
   digitalWrite(greenLedPin, LOW);
+  digitalWrite(redLedPin, HIGH);
   digitalWrite(buzzerPin, HIGH);
   lcd.clear();
   lcd.setCursor(0, 0);
@@ -106,9 +106,6 @@ void noFood() {
   lcd.setCursor(0, 1);
   lcd.print("  Insert Food  ");
   Serial.println("Box Empty, Insert Food");
-  delay(500);
-  digitalWrite(greenLedPin, HIGH);
-  delay(500);
 }
 
 void foodMoitor() {
