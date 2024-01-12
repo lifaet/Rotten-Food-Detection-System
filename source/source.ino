@@ -19,7 +19,7 @@
 #define gasPin A0
 NewPing sonar(triggerPin, echoPin, maxDistance);
 LiquidCrystal_I2C lcd(0x27, 16, 2);
-int smellReading = 0, distanceThreshold, gasThreshold;
+int smellReading = 0, distanceThreshold = 12, gasThreshold;
 
 void setup() {
   Serial.begin(9600);
@@ -34,7 +34,6 @@ void setup() {
   lcd.print("Calibrating...");
   Serial.println("Calibrating...");
   delay(2000);
-  distanceThreshold = sonar.ping() / US_ROUNDTRIP_CM - 2;
   gasThreshold = analogRead(gasPin) + 5;
   lcd.clear();
   lcd.print("Calibrated...");
